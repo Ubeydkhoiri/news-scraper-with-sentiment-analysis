@@ -32,7 +32,7 @@ def detik_news(start_date="2024-01-01", keyword="pilpres 2024"):
     while True:
         # Construct the URL for the current page
         url_detik = f'https://www.detik.com/tag/{keyword_url}/?sortby=time&page={x}'
-        print(f'scrape page:{x}')
+        print(f'scrape detik {keyword} - page:{x}')
         
         # Make a request to the URL and parse the content
         page = requests.get(url_detik)
@@ -62,7 +62,7 @@ def detik_news(start_date="2024-01-01", keyword="pilpres 2024"):
                 'score':polarity
             })
         # Break the main loop if the start_date is greater than the current article's date
-        if start_date > date:
+        if (start_date>date) or (x==20):
             break
 
         x += 1 # Move to the next page

@@ -34,6 +34,7 @@ def main():
     except KeyError:
         date = "2024-01-01"
 
+    print(date)
     keywords = ['anies baswedan','prabowo subianto','ganjar pranowo']
     data = []
     for keyword in keywords:
@@ -42,7 +43,7 @@ def main():
         cnn_func = partial(cnn.cnn_news, keyword=keyword, start_date=date)
         kompas_func = partial(kompas.kompas_news, keyword=keyword, start_date=date)
         liputan6_func = partial(liputan6.liputan6_news, keyword=keyword, start_date=date)
-        jawapos_func = partial(jawapos.jawapos_news, keyword=keyword, start_date=date)
+        jawapos_func = partial(jawapos.jawapos_news, driver=driver, keyword=keyword, start_date=date)
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             # Submit the tasks

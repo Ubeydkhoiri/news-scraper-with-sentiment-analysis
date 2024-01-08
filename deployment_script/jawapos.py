@@ -21,31 +21,19 @@ def textblob_score(text):
     return score
 
 def jawapos_news(driver, keyword, start_date):
-    # Convert spaces in the keyword to dashes to create a suitable URL
     keyword_url = keyword.replace(' ','-')
-    
-    # Convert start_date to pandas Timestamp
     start_date = pd.Timestamp(start_date)
     
-    # Initialize an empty list to store news information
-    news = []
-    
-    # Mapping for Indonesian months to English abbreviations
     month_map = {'Desember':'Dec', 'Januari':'Jan'}
-    
-    # Loop to iterate over pages (up to 15 pages or until start_date is reached)
+    news = []    
     x = 1
     while True:
-        # Construct the URL for the JawaPos website with the specified keyword and page number
         url_jawa = f'https://www.jawapos.com/tag/{keyword_url}?page={x}'
+        print(f'scrape jawapos {keyword} - page:{x}')
         
-        # Open the URL in the browser using the provided WebDriver instance ('driver')
         driver.get(url_jawa)
 
-        # Find all news articles on the page
         articles = driver.find_elements(By.CLASS_NAME, 'latest__item')
-
-        # Loop through each article and extract relevant information
         for i in articles:
             url = i.find_element(By.CLASS_NAME, 'latest__link').get_attribute('href')
             title = i.find_element(By.CLASS_NAME, 'latest__link').text

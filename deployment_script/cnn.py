@@ -28,7 +28,7 @@ def cnn_news(start_date="2024-01-01", keyword="pilpres 2024"):
 
     while True:
         url_cnn = f'https://www.cnnindonesia.com/tag/{keyword_url}/{x}'
-        print(f'scrape page:{x}')
+        print(f'scrape cnn {keyword} - page:{x}')
         
         page = requests.get(url_cnn)
         soup = BeautifulSoup(page.content, "html.parser")
@@ -53,7 +53,7 @@ def cnn_news(start_date="2024-01-01", keyword="pilpres 2024"):
                 'score':polarity
             })
             
-        if (start_date>date) or (x==25):
+        if (start_date>date) or (x==20):
             break
 
         x += 1
