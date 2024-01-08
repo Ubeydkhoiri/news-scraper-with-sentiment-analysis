@@ -19,56 +19,47 @@ def textblob_score(text):
     score = text_en.sentiment.polarity # extract polarity score
     return score
 
-# Create function to scrape data and get the polarity score 
-def detik_news(start_date="2024-01-01", keyword="pilpres 2024"):
+def cnn_news(start_date="2024-01-01", keyword="pilpres 2024"):
     start_date = pd.Timestamp(start_date)
     keyword_url = keyword.replace(' ','-')
     news = []
     
-    # Initialize page number
     x = 1
-    
-    # Loop for scraping pages until the start_date is reached
+
     while True:
-        # Construct the URL for the current page
-        url_detik = f'https://www.detik.com/tag/{keyword_url}/?sortby=time&page={x}'
+        url_cnn = f'https://www.cnnindonesia.com/tag/{keyword_url}/{x}'
         print(f'scrape page:{x}')
         
-        # Make a request to the URL and parse the content
-        page = requests.get(url_detik)
+        page = requests.get(url_cnn)
         soup = BeautifulSoup(page.content, "html.parser")
 
-        # Find all articles on the page
         articles = soup.find_all('article')
         for i in articles:
-            # Extract date, URL, and title from the article
-            date = i.find('span','date').text.split(',')[1].replace('Des','Dec')
-            date = pd.to_datetime(date)
+            title = i.find('h2').text
             url = i.find('a').get('href')
-            title = i.find('h2','title').text
-            # Calculate sentiment score using textblob_score function
+            date = url.split('/')[4].split('-')[0]
+            date = pd.to_datetime(date)
             polarity = textblob_score(title)
 
-            # Break the loop if the start_date is greater than the current article's date
-            if start_date > date:
+            if start_date>date:
                 break
 
             news.append({
                 'keyword':keyword,
-                'platform':'detikcom',
+                'platform':'cnn',
                 'date':date,
                 'url':url,
                 'title':title,
                 'score':polarity
             })
-        # Break the main loop if the start_date is greater than the current article's date
-        if start_date > date:
+            
+        if (start_date>date) or (x==25):
             break
 
-        x += 1 # Move to the next page
+        x += 1
         
     return news
 
 if __name__=="__main__":
-    data = detik_news()
+    data = cnn_news()
     print(data)

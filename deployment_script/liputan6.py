@@ -19,56 +19,47 @@ def textblob_score(text):
     score = text_en.sentiment.polarity # extract polarity score
     return score
 
-# Create function to scrape data and get the polarity score 
-def detik_news(start_date="2024-01-01", keyword="pilpres 2024"):
+def liputan6_news(start_date="2024-01-01", keyword="pilpres 2024"):
     start_date = pd.Timestamp(start_date)
     keyword_url = keyword.replace(' ','-')
     news = []
     
-    # Initialize page number
     x = 1
     
-    # Loop for scraping pages until the start_date is reached
     while True:
-        # Construct the URL for the current page
-        url_detik = f'https://www.detik.com/tag/{keyword_url}/?sortby=time&page={x}'
+        url_liputan6 = f'https://www.liputan6.com/tag/{keyword_url}?page={x}'
         print(f'scrape page:{x}')
         
-        # Make a request to the URL and parse the content
-        page = requests.get(url_detik)
+        page = requests.get(url_liputan6)
         soup = BeautifulSoup(page.content, "html.parser")
 
-        # Find all articles on the page
-        articles = soup.find_all('article')
+        articles = soup.find_all('header','articles--iridescent-list--text-item__header')
         for i in articles:
-            # Extract date, URL, and title from the article
-            date = i.find('span','date').text.split(',')[1].replace('Des','Dec')
+            date = i.find('time','articles--iridescent-list--text-item__time timeago').text.replace('Des','Dec')
             date = pd.to_datetime(date)
-            url = i.find('a').get('href')
-            title = i.find('h2','title').text
-            # Calculate sentiment score using textblob_score function
+            title = i.find('a','ui--a articles--iridescent-list--text-item__title-link').get('title')
+            url = i.find('a','ui--a articles--iridescent-list--text-item__title-link').get('href')
             polarity = textblob_score(title)
 
-            # Break the loop if the start_date is greater than the current article's date
-            if start_date > date:
+            if start_date>date:
                 break
 
             news.append({
                 'keyword':keyword,
-                'platform':'detikcom',
+                'platform':'liputan6',
                 'date':date,
                 'url':url,
                 'title':title,
                 'score':polarity
             })
-        # Break the main loop if the start_date is greater than the current article's date
-        if start_date > date:
+            
+        if (start_date>date) or (x==25):
             break
 
-        x += 1 # Move to the next page
+        x += 1 
         
     return news
 
 if __name__=="__main__":
-    data = detik_news()
+    data = liputan6_news()
     print(data)
