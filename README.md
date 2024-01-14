@@ -34,6 +34,12 @@ Sentiment Analysis Tutorial: Learn lexicon-based sentiment analysis using TextBl
     ```bash
     cd news-scraper
     ```
-4. Explore the tutorials in the notebook directory and deploy the Flask application using the scripts in deployment_script.
+4. **Run flask app.py**
+    ```bash
+    python deployment_script/app.py
+    ```
+    After flask app runs, you can copy http://127.0.0.1:5000 on your web-browser. Edit your route http://127.0.0.1:5000/export?keyword='anies baswedan' to export all news with tag 'anies baswedan'. And http://127.0.0.1:5000/updatedata to run the scraper and update the data
+
+5. Explore the tutorials in the notebook directory and deploy the Flask application using the scripts in deployment_script.
 
 #### Note: Stay tuned for more tutorials as the project progresses!
