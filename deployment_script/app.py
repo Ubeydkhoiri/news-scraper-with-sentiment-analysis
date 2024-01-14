@@ -13,7 +13,13 @@ dataframe = dataframe.sort_values(['date'], ascending=False)
 
 @app.route('/')
 def home():
-    return "Hello, thank you for visiting my repository!"
+    return {
+        'message':"Hello, thank you for visiting my repository!",
+        'routes':[{
+            '/export':"Export all data based on keyword",
+            '/updatedata':"To update the data"
+        }]
+        }
 
 @app.route('/export')
 def export():
@@ -34,7 +40,8 @@ def export():
 @app.route('/updatedata')
 def updatedata():
     main()
-    return {'message':'Data has been updated!'}
+    return {'status':'success',
+            'message':'Data has been updated!'}
 
 if __name__ == '__main__':
     app.run(debug=True)

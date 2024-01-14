@@ -2,11 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 
-import detik
-import cnn
-import kompas
-import liputan6
-import jawapos
+import static_scraper
+import dynamic_scraper
 
 import pandas as pd
 from pathlib import Path
@@ -39,11 +36,11 @@ def main():
     data = []
     for keyword in keywords:
         # Create partial functions with fixed parameters
-        detik_func = partial(detik.detik_news, keyword=keyword, start_date=date)
-        cnn_func = partial(cnn.cnn_news, keyword=keyword, start_date=date)
-        kompas_func = partial(kompas.kompas_news, keyword=keyword, start_date=date)
-        liputan6_func = partial(liputan6.liputan6_news, keyword=keyword, start_date=date)
-        jawapos_func = partial(jawapos.jawapos_news, driver=driver, keyword=keyword, start_date=date)
+        detik_func = partial(static_scraper.detik_news, keyword=keyword, start_date=date)
+        cnn_func = partial(static_scraper.cnn_news, keyword=keyword, start_date=date)
+        kompas_func = partial(static_scraper.kompas_news, keyword=keyword, start_date=date)
+        liputan6_func = partial(static_scraper.liputan6_news, keyword=keyword, start_date=date)
+        jawapos_func = partial(dynamic_scraper.jawapos_news, driver=driver, keyword=keyword, start_date=date)
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             # Submit the tasks
